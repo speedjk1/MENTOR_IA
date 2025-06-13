@@ -34,7 +34,7 @@ body {
 .container {
   width: 100%;
   max-width: 700px;
-  height: 100vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
@@ -92,14 +92,14 @@ h1 {
 
 form {
   display: flex;
-  padding: 1rem;
+  padding: 10px;
   background: var(--input-bg);
-  gap: 10px;
   border-top: 1px solid #555;
+  align-items: center;
 }
 
 input[type="text"] {
-  flex-grow: 1;
+  flex: 1;
   padding: 0.8rem;
   font-size: 1rem;
   border-radius: 8px;
@@ -114,6 +114,7 @@ body.light input[type="text"] {
 }
 
 button {
+  margin-left: 10px;
   padding: 0.8rem 1.2rem;
   background: var(--user);
   color: white;
@@ -128,7 +129,7 @@ button:hover {
   background: #0d8c6f;
 }
 
-/* Toggle switch estilo iOS */
+/* Toggle modo oscuro/claro */
 .toggle-container {
   position: absolute;
   top: 1.2rem;
@@ -178,30 +179,4 @@ input:checked + .slider {
 
 input:checked + .slider::before {
   transform: translateX(22px);
-}
-
-/* ✅ Responsivo para escritorio */
-@media (min-width: 768px) {
-  .container {
-    height: 90vh;
-  }
-
-  .chat-box {
-    max-height: unset;
-    height: 100%;
-  }
-
-  form {
-    padding: 1rem;
-  }
-
-  input[type="text"] {
-    font-size: 1rem;
-    padding: 0.8rem;
-  }
-
-  button {
-    font-size: 1rem;
-    padding: 0.8rem 1.2rem;
-  }
 }
