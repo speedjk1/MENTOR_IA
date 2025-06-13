@@ -92,14 +92,14 @@ h1 {
 
 form {
   display: flex;
-  padding: 10px;
+  padding: 1rem;
   background: var(--input-bg);
+  gap: 10px;
   border-top: 1px solid #555;
-  align-items: center;
 }
 
 input[type="text"] {
-  flex: 1;
+  flex-grow: 1;
   padding: 0.8rem;
   font-size: 1rem;
   border-radius: 8px;
@@ -114,7 +114,6 @@ body.light input[type="text"] {
 }
 
 button {
-  margin-left: 10px;
   padding: 0.8rem 1.2rem;
   background: var(--user);
   color: white;
@@ -129,7 +128,7 @@ button:hover {
   background: #0d8c6f;
 }
 
-/* Toggle modo oscuro/claro */
+/* Toggle switch estilo iOS */
 .toggle-container {
   position: absolute;
   top: 1.2rem;
@@ -179,4 +178,4 @@ input:checked + .slider {
 
 input:checked + .slider::before {
   transform: translateX(22px);
-}
+} 
