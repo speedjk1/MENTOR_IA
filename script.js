@@ -16,7 +16,7 @@ form.addEventListener("submit", async (e) => {
   chatBox.scrollTop = chatBox.scrollHeight;
 
   try {
-    const res = await fetch("https://a7f4-187-102-208-244.ngrok-free.app/v1/completions", {
+    const res = await fetch("https://933c-187-102-208-244.ngrok-free.app/v1/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
