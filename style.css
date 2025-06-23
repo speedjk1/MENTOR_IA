@@ -33,23 +33,31 @@ body {
 
 .container {
   width: 100%;
-  max-width: 700px;
-  height: 90vh;
+  max-width: 650px;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.3);
   position: relative;
 }
 
-h1 {
-  background: #202123;
-  padding: 1rem;
-  text-align: center;
+
+.logo img {
+  width: 100px;  
+}
+
+
+
+h1 {   
+  padding: 1rem; 
+   text-align: center;
   font-size: 1.5rem;
-  border-bottom: 1px solid #555;
+  position: absolute;
+  top: 10px;
+  
 }
 
 .chat-box {
