@@ -14,17 +14,17 @@ const reflectionsEl = document.getElementById('completed-reflections');
 const goalsEl = document.getElementById('goals-status');
 const historyUl = document.getElementById('reflection-history');
 
-// Estado de progreso y reflexiones
+// Estado de progreso
 let daysUsed = 0;
 let reflectionsDone = 0;
 let goalsDone = 0;
 
-// --- “Personalidad” y conversación en texto plano ---
-const SYSTEM_PROMPT = 
+// Prompt base
+const SYSTEM_PROMPT =
   "Eres Mentor IA, un asistente amable y motivador. Responde de forma cercana, ofrece consejos y preguntas de seguimiento.";
-let conversationHistory = [];  // esta será una lista de objetos {role, content}
+let conversationHistory = [];
 
-// --- Utilidades de reflexiones y progreso ---
+// --- Carga reflexiones previas ---
 function loadReflections() {
   const stored = JSON.parse(localStorage.getItem('reflections') || '[]');
   historyUl.innerHTML = '';
@@ -35,17 +35,17 @@ function loadReflections() {
   });
   reflectionsDone = stored.length;
 }
+
+// --- Actualiza panel de progreso ---
 function updateProgressPanel() {
   usageDaysEl.textContent = daysUsed;
   reflectionsEl.textContent = reflectionsDone;
   goalsEl.textContent = `${goalsDone}/${goalsDone}`;
 }
 
-// --- Build prompt de completions ---
+// --- Construir prompt desde historial ---
 function buildPrompt() {
-  // Inicia con el sistema
   let p = SYSTEM_PROMPT + "\n\n";
-  // Añade cada turno
   conversationHistory.forEach(entry => {
     if (entry.role === 'user') {
       p += `Usuario: ${entry.content}\n`;
@@ -53,13 +53,11 @@ function buildPrompt() {
       p += `Asistente: ${entry.content}\n`;
     }
   });
-  // Dejamos al asistente listo para responder
   p += "Asistente:";
   return p;
 }
 
-// --- Eventos de UI ---
-// Reset total
+// --- Resetear todo ---
 clearChatBtn.addEventListener('click', () => {
   chatBox.innerHTML = '';
   daysUsed = reflectionsDone = goalsDone = 0;
@@ -69,7 +67,7 @@ clearChatBtn.addEventListener('click', () => {
   updateProgressPanel();
 });
 
-// Enviar reflexión
+// --- Guardar reflexión ---
 sendReflectionBtn.addEventListener('click', () => {
   const text = reflectionTextarea.value.trim();
   if (!text) return;
@@ -87,7 +85,7 @@ sendReflectionBtn.addEventListener('click', () => {
   reflectionTextarea.value = '';
 });
 
-// Sidebar open/close
+// --- Sidebar ---
 openSidebarBtn.addEventListener('click', () => {
   sidebar.classList.add('open');
   document.querySelector('.main').classList.add('shifted');
@@ -97,19 +95,25 @@ closeSidebarBtn.addEventListener('click', () => {
   document.querySelector('.main').classList.remove('shifted');
 });
 
-// Tema
+// --- Modo claro/oscuro (INVERTIDO) ---
 themeToggle.addEventListener('change', () => {
-  document.body.classList.toggle('light');
-  localStorage.setItem(
-    'theme',
-    document.body.classList.contains('light') ? 'light' : 'dark'
-  );
+  if (themeToggle.checked) {
+    document.body.classList.remove('light'); // Oscuro
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.body.classList.add('light'); // Claro
+    localStorage.setItem('theme', 'light');
+  }
 });
 
-// Inicialización
+// --- Inicialización ---
 window.addEventListener('DOMContentLoaded', () => {
-  if (localStorage.getItem('theme') === 'light') {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') {
     document.body.classList.add('light');
+    themeToggle.checked = false;
+  } else {
+    document.body.classList.remove('light');
     themeToggle.checked = true;
   }
   loadReflections();
@@ -122,13 +126,11 @@ form.addEventListener('submit', async (e) => {
   const message = input.value.trim();
   if (!message) return;
 
-  // Mostrar mensaje del usuario
   const userDiv = document.createElement('div');
   userDiv.className = 'user';
   userDiv.textContent = message;
   chatBox.appendChild(userDiv);
 
-  // Añadir al historial
   conversationHistory.push({ role: 'user', content: message });
 
   input.value = '';
@@ -138,12 +140,10 @@ form.addEventListener('submit', async (e) => {
     updateProgressPanel();
   }
 
-  // Indicador
   chatBox.innerHTML += `<div class="bot typing">Escribiendo...</div>`;
   chatBox.scrollTop = chatBox.scrollHeight;
 
   try {
-    // Llamada a completions en lugar de chat/completions
     const res = await fetch(
       "https://c6c8-2803-a3e0-1a01-1520-408c-8607-3a11-559c.ngrok-free.app/v1/completions",
       {
@@ -157,22 +157,19 @@ form.addEventListener('submit', async (e) => {
           prompt: buildPrompt(),
           max_tokens: 150,
           temperature: 0.6,
-          stop: ["Usuario:", "Asistente:"]  // opcional para cortar bien
+          stop: ["Usuario:", "Asistente:"]
         })
       }
     );
     const data = await res.json();
-    // Quitar indicador
     const typingDiv = document.querySelector(".typing");
     if (typingDiv) typingDiv.remove();
 
     const reply = (data.choices?.[0]?.text || "").trim() || "Sin respuesta";
 
-    // Mostrar respuesta
     chatBox.innerHTML += `<div class="bot">${reply}</div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    // Guardar en historial
     conversationHistory.push({ role: 'assistant', content: reply });
 
   } catch (err) {
@@ -183,5 +180,3 @@ form.addEventListener('submit', async (e) => {
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 });
-
-/*ultimo cambio*/
