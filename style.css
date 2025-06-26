@@ -230,6 +230,14 @@ input:checked + .slider::before {
 
 /* Responsive */
 @media (max-width: 480px) {
-  .sidebar { width: 100%; }
-  .header h1 { font-size: 1rem; }
+  .sidebar {
+    width: 100%;
+    left: -100%; /* Change: ocultar full width en móvil */
+  }
+  .sidebar.open {
+    left: 0;
+  }
+  .header h1 {
+    font-size: 1rem;
+  }
 }
