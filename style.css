@@ -1,4 +1,6 @@
-/* Variables de color */
+/* ---------------------------------------------
+   Variables de color y tipografía
+---------------------------------------------- */
 :root {
   --bg: #343541;
   --text: #ececf1;
@@ -16,8 +18,46 @@ body.light {
   --accent: #00796b;
 }
 
-/* Reset y Layout */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ---------------------------------------------
+   Close button (equis) más vistosa
+---------------------------------------------- */
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.close-btn:hover {
+  background: rgba(16,163,127,0.8);
+  transform: scale(1.1);
+}
+.close-btn:active {
+  transform: scale(0.9);
+}
+
+
+
+/* ---------------------------------------------
+   Reset y Layout general
+---------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 body {
   display: flex;
   height: 100vh;
@@ -27,69 +67,115 @@ body {
   overflow: hidden;
 }
 
-/* Sidebar */
+/* ---------------------------------------------
+   Sidebar (parte izquierda)
+---------------------------------------------- */
 .sidebar {
   position: fixed;
-  left: -280px;
-  top: 0; bottom: 0;
-  width: 280px;
+  left: -320px;
+  top: 0;
+  bottom: 0;
+  width: 320px;
   background: var(--input-bg);
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   overflow-y: auto;
   transition: left 0.3s ease;
-  z-index: 10;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  z-index: 20;
 }
-.sidebar.open { left: 0; }
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--text);
-  cursor: pointer;
-  float: right;
+.sidebar.open {
+  left: 0;
 }
-.sidebar-section + .sidebar-section { margin-top: 1.5rem; }
-.sidebar-section h3 {
+
+/* Secciones internas */
+.sidebar-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
   margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  color: var(--accent);
 }
-.sidebar-section p { margin-bottom: 0.5rem; }
-.sidebar-section button,
+.sidebar-section p {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* Botones */
+.sidebar-section button {
+  display: block;
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 500;
+  padding: 0.6rem 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar-section button:hover {
+  background: rgba(16,163,127,0.8);
+}
+
+/* Selects y textareas */
 .sidebar-section select,
 .sidebar-section textarea {
   width: 100%;
-  margin-top: 0.5rem;
-}
-.sidebar-section button {
-  background: var(--accent);
-  color: #fff;
-  padding: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 6px;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.sidebar-section textarea {
-  height: 80px;
-  border-radius: 6px;
-  padding: 0.5rem;
   background: #53545c;
   color: #fff;
-  resize: vertical;
+  font-size: 0.95rem;
 }
+body.light .sidebar-section select,
 body.light .sidebar-section textarea {
   background: #fff;
   color: #000;
 }
+.sidebar-section textarea {
+  height: 80px;
+  resize: vertical;
+}
 
-/* Main container */
+/* Historial de reflexiones */
+#reflection-history {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  padding-left: 0;
+}
+#reflection-history li {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------
+   Main container
+---------------------------------------------- */
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
   position: relative;
+  transition: margin-left 0.3s ease;
+}
+.main.shifted {
+  margin-left: 320px;
 }
 
-/* Header */
+/* ---------------------------------------------
+   Header
+---------------------------------------------- */
 .header {
   height: 52px;
   background: var(--input-bg);
@@ -106,9 +192,14 @@ body.light .sidebar-section textarea {
   color: var(--text);
   cursor: pointer;
 }
-.header h1 { flex: 1; font-size: 1.2rem; }
+.header h1 {
+  flex: 1;
+  font-size: 1.2rem;
+}
 
-/* Chat area */
+/* ---------------------------------------------
+   Área de chat
+---------------------------------------------- */
 .chat-box {
   flex: 1;
   padding: 1rem;
@@ -117,9 +208,8 @@ body.light .sidebar-section textarea {
   flex-direction: column;
   gap: 0.75rem;
 }
-
-/* "Change: Burbujas con sombra y transición" */
-.user, .bot {
+.user,
+.bot {
   max-width: 75%;
   padding: 0.6rem 1rem;
   border-radius: 12px;
@@ -141,7 +231,7 @@ body.light .sidebar-section textarea {
   background: var(--bubble-bot);
 }
 
-/* "Change: Animación de puntos para typing indicator" */
+/* Indicador de escritura */
 .bot.typing {
   position: relative;
   background: transparent;
@@ -156,19 +246,27 @@ body.light .sidebar-section textarea {
   animation: typing-dots 1s steps(4, end) infinite;
 }
 @keyframes typing-dots {
-  0% { content: ''; }
-  25% { content: '.'; }
-  50% { content: '..'; }
-  75% { content: '...'; }
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
   100% { content: ''; }
 }
 
-/* Input fijo */
+/* ---------------------------------------------
+   Input fijo abajo
+---------------------------------------------- */
 .input-area {
   display: flex;
   padding: 0.5rem;
   background: var(--input-bg);
   border-top: 1px solid #555;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  max-width: 100%;
 }
 .input-area input {
   flex: 1;
@@ -177,8 +275,8 @@ body.light .sidebar-section textarea {
   border: none;
   background: #53545c;
   color: #fff;
+  font-size: 1rem;
 }
-/* "Change: Outline visible en focus" */
 .input-area input:focus {
   outline: 2px solid var(--accent);
 }
@@ -194,16 +292,21 @@ body.light .input-area input {
   background: var(--accent);
   color: #fff;
   cursor: pointer;
+  font-weight: 500;
 }
 
-/* Toggle Theme (iOS style) */
+/* ---------------------------------------------
+   Toggle Theme (iOS style)
+---------------------------------------------- */
 .switch {
   position: relative;
   width: 40px;
   height: 22px;
 }
 .switch input {
-  opacity: 0; width: 0; height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 .slider {
   position: absolute;
@@ -215,8 +318,10 @@ body.light .input-area input {
 .slider::before {
   content: '';
   position: absolute;
-  width: 18px; height: 18px;
-  left: 2px; bottom: 2px;
+  width: 18px;
+  height: 18px;
+  left: 2px;
+  bottom: 2px;
   background: #fff;
   border-radius: 50%;
   transition: .4s;
@@ -228,20 +333,9 @@ input:checked + .slider::before {
   transform: translateX(18px);
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .sidebar {
-    width: 100%;
-    left: -100%; /* Change: ocultar full width en móvil */
-  }
-  .sidebar.open {
-    left: 0;
-  }
-  .header h1 {
-    font-size: 1rem;
-  }
-}
-
+/* ---------------------------------------------
+   Watermark de fondo
+---------------------------------------------- */
 body::before {
   content: "";
   position: fixed;
@@ -249,13 +343,27 @@ body::before {
   width: 100%;
   height: 100%;
   background-image: url("logo.png");
-  background-size: 600px auto; /* Aquí aumentas el tamaño */
+  background-size: 600px auto;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.1;
+  opacity: 0.15;
   pointer-events: none;
   z-index: -2;
 }
 
-
+/* ---------------------------------------------
+   Responsive
+---------------------------------------------- */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    left: -100%;
+  }
+  .main.shifted {
+    margin-left: 0;
+  }
+  .header h1 {
+    font-size: 1rem;
+  }
+}
 

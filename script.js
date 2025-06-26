@@ -12,74 +12,104 @@ const sendReflectionBtn = document.getElementById('send-reflection');
 const usageDaysEl = document.getElementById('usage-days');
 const reflectionsEl = document.getElementById('completed-reflections');
 const goalsEl = document.getElementById('goals-status');
+const historyUl = document.getElementById('reflection-history');
 
-// --- Estado local ---
 let daysUsed = 0;
 let reflectionsDone = 0;
 let goalsDone = 0;
 
-// --- Funciones de utilidad ---
+// --- Función: cargar reflexiones desde localStorage ---
+function loadReflections() {
+  const stored = JSON.parse(localStorage.getItem('reflections') || '[]');
+  historyUl.innerHTML = '';
+  stored.forEach(text => {
+    const li = document.createElement('li');
+    li.textContent = text;
+    historyUl.appendChild(li);
+  });
+  reflectionsDone = stored.length;
+}
+
+// --- Función: actualizar panel de progreso ---
 function updateProgressPanel() {
   usageDaysEl.textContent = daysUsed;
   reflectionsEl.textContent = reflectionsDone;
   goalsEl.textContent = `${goalsDone}/${goalsDone}`;
 }
 
-// --- Borrar chat y resetear contadores ---
+// --- Borrar chat y resetear todo ---
 clearChatBtn.addEventListener('click', () => {
   chatBox.innerHTML = '';
   daysUsed = 0;
   reflectionsDone = 0;
   goalsDone = 0;
+  localStorage.removeItem('reflections');
+  loadReflections();
   updateProgressPanel();
 });
 
+// --- Enviar reflexión ---
 sendReflectionBtn.addEventListener('click', () => {
   const text = reflectionTextarea.value.trim();
   if (!text) return;
 
-  /* Change: Ahora, la reflexión se añade al historial, no al chat */ 
-  const historyUl = document.getElementById('reflection-history');
+  // Añadir al DOM
   const li = document.createElement('li');
   li.textContent = text;
   historyUl.appendChild(li);
 
+  // Guardar en localStorage
+  const stored = JSON.parse(localStorage.getItem('reflections') || '[]');
+  stored.push(text);
+  localStorage.setItem('reflections', JSON.stringify(stored));
+
   // Actualizar contadores
-  reflectionsDone++;
+  reflectionsDone = stored.length;
   if (daysUsed < 1) daysUsed = 1;
   updateProgressPanel();
 
-  // Cerrar sidebar para que veas el historial
+  // Cerrar sidebar y limpiar textarea
   sidebar.classList.remove('open');
-
-  // Limpiar textarea
+  document.querySelector('.main').classList.remove('shifted');
   reflectionTextarea.value = '';
 });
 
-// --- Sidebar open/close ---
-openSidebarBtn.addEventListener('click', () => sidebar.classList.add('open'));
-closeSidebarBtn.addEventListener('click', () => sidebar.classList.remove('open'));
+// --- Apertura/Cierre de sidebar con desplazamiento del main ---
+openSidebarBtn.addEventListener('click', () => {
+  sidebar.classList.add('open');
+  document.querySelector('.main').classList.add('shifted');
+});
+closeSidebarBtn.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  document.querySelector('.main').classList.remove('shifted');
+});
 
 // --- Tema claro/oscuro ---
 themeToggle.addEventListener('change', () => {
   document.body.classList.toggle('light');
-  localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+  localStorage.setItem(
+    'theme',
+    document.body.classList.contains('light') ? 'light' : 'dark'
+  );
 });
 window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('theme');
-  if (saved === 'light') {
+  // Cargar tema
+  if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light');
     themeToggle.checked = true;
   }
+  // Cargar reflexiones y progreso
+  loadReflections();
+  updateProgressPanel();
 });
 
-// --- Manejar envío de chat ---
+// --- Manejo del chat y LÓGICA IA (NO TOCAR esta sección) ---
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const message = input.value.trim();
   if (!message) return;
 
-  // Mensaje del usuario
+  // Mostrar mensaje de usuario
   const userDiv = document.createElement('div');
   userDiv.className = 'user';
   userDiv.textContent = message;
@@ -87,14 +117,13 @@ form.addEventListener('submit', async (e) => {
   input.value = '';
   chatBox.scrollTop = chatBox.scrollHeight;
 
-  // Contar uso de día
+  // Asegurar días de uso
   if (daysUsed < 1) {
     daysUsed = 1;
     updateProgressPanel();
   }
 
-  // ==== LÓGICA IA (NO TOCAR) ====
-  // Muestra “Escribiendo...”
+  // Indicador “Escribiendo…”
   chatBox.innerHTML += `<div class="bot typing">Escribiendo...</div>`;
   chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -108,10 +137,7 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify({
         model: "mistralai/mistral-7b-instruct-v0.3",
         messages: [
-          {
-            role: "user",
-            content: message
-          }
+          { role: "user", content: message }
         ],
         max_tokens: 150,
         temperature: 0.6
@@ -129,11 +155,7 @@ form.addEventListener('submit', async (e) => {
     if (typingDiv) typingDiv.remove();
     chatBox.innerHTML += `<div class="bot error">Error de conexión con el servidor</div>`;
   }
-  // ==== FIN LÓGICA IA ====
 
   chatBox.scrollTop = chatBox.scrollHeight;
 });
-
-// --- Inicializar ---
-updateProgressPanel();
-
+// === FIN sección IA ===
