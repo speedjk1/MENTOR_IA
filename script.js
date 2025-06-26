@@ -99,14 +99,14 @@ form.addEventListener('submit', async (e) => {
   chatBox.scrollTop = chatBox.scrollHeight;
 
   try {
-    const res = await fetch("https://c6c8-2803-a3e0-1a01-1520-408c-8607-3a11-559c.ngrok-free.app/v1/chat/completions", {
+    const res = await fetch("https://c6c8-2803-a3e0-1a01-1520-408c-8607-3a11-559c.ngrok-free.app/v1/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer no-key-needed"
       },
       body: JSON.stringify({
-        model: "mistralai/mistral-7b-instruct-v0.3:2",
+        model: "mistralai/mistral-7b-instruct-v0.3",
         messages: [
           {
             role: "user",
