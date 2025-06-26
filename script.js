@@ -95,7 +95,7 @@ closeSidebarBtn.addEventListener('click', () => {
   document.querySelector('.main').classList.remove('shifted');
 });
 
-// --- Modo claro/oscuro (INVERTIDO) ---
+// --- Modo claro/oscuro (INVERTIDO) --- 
 themeToggle.addEventListener('change', () => {
   if (themeToggle.checked) {
     document.body.classList.remove('light'); // Oscuro
@@ -180,3 +180,5 @@ form.addEventListener('submit', async (e) => {
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 });
+
+/*FIN DE EL JS*/
